@@ -7,6 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 from config.settings import get_settings
 from src.rag.prompt_builder import PromptBuilder
+from src.rag.prompt_repository import PromptRepository
 
 from src.rag.llm.base import BaseLLMClient
 
@@ -25,10 +26,13 @@ class OpenAIClient(BaseLLMClient):
         prompt_builder: PromptBuilder | None = None,
     ):
 
-        self._prompt_builder = prompt_builder or PromptBuilder()
+        self._prompt_builder = prompt_builder or PromptBuilder(
+            system_prompt=PromptRepository.load("rag_system.txt"),
+            user_prompt=PromptRepository.load("rag_user.txt"),
+        )
 
         self._llm = ChatOpenAI(
-            model=model or settings.OPENAI_MODEL,
+            model=model or settings.LLM_MODEL,
             api_key=api_key or settings.OPENAI_API_KEY,
             base_url=base_url or settings.OPENAI_BASE_URL,
             temperature=temperature
@@ -44,7 +48,7 @@ class OpenAIClient(BaseLLMClient):
 
         logger.info(
             "OpenAI client initialized",
-            model=model or settings.OPENAI_MODEL,
+            model=model or settings.LLM_MODEL,
         )
 
     def generate(
@@ -76,3 +80,7 @@ class OpenAIClient(BaseLLMClient):
                 "context": formatted_context,
             }
         )
+
+    @property
+    def llm(self):
+        return self._llm

@@ -5,6 +5,7 @@ from langchain_ollama import ChatOllama
 from src.rag.llm.base import BaseLLMClient
 from config.settings import get_settings
 from src.rag.prompt_builder import PromptBuilder
+from src.rag.prompt_repository import PromptRepository
 import structlog
 
 
@@ -13,47 +14,49 @@ logger = structlog.get_logger(__name__)
 
 class OllamaClient(BaseLLMClient):
     """
-    Ollama LLM client wired to the RAG prompt.
+    Ollama LLM client for RAG answer generation.
 
-    Wraps LangChain's ChatOllama and composes it with the PromptBuilder
-    into a single invokable chain:
+    Builds the LangChain pipeline:
 
-        prompt | ChatOllama | StrOutputParser
+        PromptBuilder -> ChatOllama -> StrOutputParser
 
-    Keeping the LLM client separate from the pipeline means you can
-    swap Ollama for OpenAI or vLLM by replacing only this class.
+    Prompt templates are loaded from disk via PromptRepository.
     """
-
     def __init__(
         self,
-        model:    str | None = None,
+        model: str | None = None,
         base_url: str | None = None,
         temperature: float | None = None,
         prompt_builder: PromptBuilder | None = None,
     ) -> None:
-        """
-        Args:
-            model:          Ollama model tag (e.g. "llama3", "mistral").
-                            Defaults to settings.llm_model_name.
-            base_url:       Ollama server URL. Defaults to settings.llm_base_url.
-            temperature:    Sampling temperature. Defaults to settings.llm_temperature.
-            prompt_builder: PromptBuilder instance. A default one is created if omitted.
-        """
-        self._prompt_builder = prompt_builder or PromptBuilder()
+
+        self._prompt_builder = prompt_builder or PromptBuilder(
+            system_prompt=PromptRepository.load("rag_system.txt"),
+            user_prompt=PromptRepository.load("rag_user.txt"),
+        )
 
         self._llm = ChatOllama(
-            model       = model       or settings.OLLAMA_MODEL,
-            base_url    = base_url    or settings.OLLAMA_BASE_URL,
-            temperature = temperature if temperature is not None else settings.LLM_TEMPERATURE,
+            model=model or settings.LLM_MODEL,
+            base_url=base_url or settings.OLLAMA_BASE_URL,
+            temperature=(
+                temperature
+                if temperature is not None
+                else settings.LLM_TEMPERATURE
+            ),
         )
 
-        self._chain = self._prompt_builder.prompt | self._llm | StrOutputParser()
+        self._chain = (
+            self._prompt_builder.prompt
+            | self._llm
+            | StrOutputParser()
+        )
 
         logger.info(
-            "LLMClient initialised",
-            model=model or settings.OLLAMA_MODEL,
+            "OllamaClient initialized",
+            model=model or settings.LLM_MODEL,
             base_url=base_url or settings.OLLAMA_BASE_URL,
         )
+
     # ── Public API ────────────────────────────────────────────────────────────
 
     def generate(self, question: str, context: list[dict]) -> str:
@@ -111,3 +114,7 @@ class OllamaClient(BaseLLMClient):
             "context":  formatted_context,
         }):
             yield chunk
+
+    @property
+    def llm(self):
+        return self._llm
