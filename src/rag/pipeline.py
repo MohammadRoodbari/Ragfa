@@ -122,6 +122,8 @@ class RAGPipeline:
             )
 
         # 3. Generate answer grounded in retrieved context
+        #    NOTE: we pass the ORIGINAL question to the LLM, not the rewritten
+        #    one — the rewrite was only for retrieval quality improvement.
         answer = self._llm.generate(
             question = request.question,
             context  = retrieval_result.context,
