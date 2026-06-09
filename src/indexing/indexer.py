@@ -8,7 +8,7 @@ from typing import Any
 from src.core.es_client import bulk_index, create_index_if_not_exists
 from src.indexing.embeddings.base import BaseEmbeddings
 from src.indexing.loaders.base import Document
-from indexing.chunker import HybridSemanticChunker
+from src.indexing.chunker import HybridSemanticChunker
 
 logger = logging.getLogger(__name__)
 

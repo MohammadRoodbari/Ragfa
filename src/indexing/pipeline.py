@@ -10,7 +10,7 @@ from src.indexing.indexer import Indexer
 from src.indexing.loaders.base import Document
 from src.indexing.loaders.docx_loader import DocxLoader
 from src.indexing.loaders.pdf_loader import PdfLoader
-from indexing.chunker import HybridSemanticChunker
+from src.indexing.chunker import HybridSemanticChunker
 import structlog
 
 logger = structlog.get_logger()
