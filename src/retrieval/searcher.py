@@ -12,7 +12,7 @@ from src.core.es_client import get_es_client
 logger = structlog.get_logger(__name__)
 settings = get_settings()
 
-_SOURCE_FIELDS = ["chunk_id", "doc_id", "source", "text"]
+_SOURCE_FIELDS = ["chunk_id", "doc_id", "metadata", "text"]
 
 
 class HybridSearcher:

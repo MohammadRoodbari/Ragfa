@@ -27,7 +27,6 @@ class ContextBuilder:
             "citation_index": 1,          # 1-based label for inline citation
             "chunk_id":       "doc42_chunk_3",
             "doc_id":         "doc42",
-            "source":         "report_2024.pdf",
             "text":           "...",
             "rrf_score":      0.012345,   # present when coming from reranker
         }
@@ -96,7 +95,7 @@ class ContextBuilder:
         """
         parts = []
         for item in context:
-            header = f"[{item['citation_index']}] {item['source']}"
+            header = f"[{item['citation_index']}] {item['metadata']['file_name']}"
             parts.append(f"{header}\n{item['text'].strip()}")
         return "\n\n".join(parts)
 
