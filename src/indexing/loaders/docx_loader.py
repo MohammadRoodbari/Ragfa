@@ -103,13 +103,10 @@ class DocxLoader(DocumentLoader):
         content = self.paragraph_separator.join(
             block.text for block in blocks
         )
-
-        metadata = self._extract_metadata(doc, path)
-
         return Document(
             content=content,
             source=str(path),
-            metadata=metadata,
+            metadata={"file_name": path.name},
             blocks=blocks,
         )
 
@@ -237,30 +234,4 @@ class DocxLoader(DocumentLoader):
         """
 
         return " ".join(text.split()).strip()
-
-    @staticmethod
-    def _extract_metadata(
-        doc: docx.Document,
-        path: Path,
-    ) -> dict:
-
-        props = doc.core_properties
-
-        return {
-            "title": props.title or "",
-            "author": props.author or "",
-            "subject": props.subject or "",
-            "keywords": props.keywords or "",
-            "created": (
-                props.created.isoformat()
-                if props.created
-                else ""
-            ),
-            "modified": (
-                props.modified.isoformat()
-                if props.modified
-                else ""
-            ),
-            "file_name": path.name,
-        }
 

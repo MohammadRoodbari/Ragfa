@@ -95,17 +95,12 @@ class Indexer:
         es_docs = []
         for idx, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
             chunk_id = f"{doc_id}_chunk_{idx}"
-
             es_doc = {
-                "_id": chunk_id,
                 "chunk_id": chunk_id,
                 "doc_id": doc_id,
-                "source": document.source,
                 "text": chunk.text,
                 "embedding": embedding,
                 "metadata": document.metadata,
-                "section_path": chunk.section_path,
-                "block_types": chunk.block_types,
                 "chunk_index": chunk.chunk_index,
             }
 

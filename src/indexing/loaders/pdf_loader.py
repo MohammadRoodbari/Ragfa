@@ -60,21 +60,7 @@ class PdfLoader(DocumentLoader):
                 )
 
             content = self.page_separator.join(pages)
-            metadata = self._extract_metadata(doc, path)
-
-            return Document(content=content, source=str(path), metadata=metadata)
+            return Document(content=content, source=str(path), metadata={"file_name": path.name})
 
         finally:
             doc.close()
-
-    @staticmethod
-    def _extract_metadata(doc: fitz.Document, path: Path) -> dict:
-        meta = doc.metadata or {}
-        return {
-            "num_pages": doc.page_count,
-            "title": meta.get("title", "") or "",
-            "author": meta.get("author", "") or "",
-            "subject": meta.get("subject", "") or "",
-            "creator": meta.get("creator", "") or "",
-            "file_name": path.name,
-        }

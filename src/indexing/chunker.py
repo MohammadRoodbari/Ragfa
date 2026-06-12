@@ -278,8 +278,6 @@ class HybridSemanticChunker:
                 Chunk(
                     text=merged_text,
                     chunk_index=chunk.chunk_index,
-                    section_path=chunk.section_path,
-                    block_types=chunk.block_types,
                     metadata=chunk.metadata,
                 )
             )
