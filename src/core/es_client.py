@@ -23,7 +23,7 @@ def get_es_client() -> Elasticsearch:
     """
     kwargs: dict[str, Any] = {
         "hosts": [settings.ES_HOST],
-        # "basic_auth": (settings.es_username, settings.es_password),
+        "basic_auth": (settings.ES_USERNAME, settings.ES_PASSWORD),
         "retry_on_timeout": True,
         "max_retries": 3,
         "request_timeout": 30,
