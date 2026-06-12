@@ -1,0 +1,11 @@
+pydantic
+pydantic-settings
+structlog
+
+fastapi
+uvicorn[standard]
+gunicorn
+
+redis[hiredis]
+celery[rabbitmq]
+httpx
