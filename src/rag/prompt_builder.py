@@ -36,9 +36,7 @@ class PromptBuilder:
 
             header = (
                 f"[{item['citation_index']}] "
-                f"{item.get('source', '')} "
-                f"| doc: {item.get('doc_id', '')} "
-                f"| chunk: {item.get('chunk_id', '')}"
+                f"{item.get('metadata', '').get('file_name', '')}"
             )
 
             parts.append(

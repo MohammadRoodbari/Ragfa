@@ -128,16 +128,12 @@ class RAGPipeline:
             question = request.question,
             context  = retrieval_result.context,
         )
-
         # 4. Build source list from attributed context
         sources = [
             SourceDoc(
                 citation_index = item["citation_index"],
-                chunk_id       = item.get("chunk_id", ""),
-                doc_id         = item.get("doc_id", ""),
-                source         = item.get("source", ""),
+                source         = item['metadata'].get("file_name", ""),
                 text           = item.get("text", ""),
-                rrf_score      = item.get("rrf_score", 0.0),
             )
             for item in retrieval_result.context
         ]
@@ -194,7 +190,7 @@ class RAGPipeline:
         if not retrieval_result.context:
             yield "I was unable to find relevant information in the documents."
             return
-
+        
         # 3. Stream the answer using the ORIGINAL question (not the rewrite)
         yield from self._llm.generate_stream(
             question = request.question,

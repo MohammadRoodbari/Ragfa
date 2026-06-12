@@ -106,7 +106,6 @@ class OllamaClient(BaseLLMClient):
             "Streaming answer",
             question_preview=question[:80],
         )
-
         formatted_context = self._prompt_builder.format_context(context)
 
         for chunk in self._chain.stream({
