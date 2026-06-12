@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     # ── Elasticsearch ────────────────────────────────────────
     ES_HOST: str
     ES_INDEX: str
+    ES_USERNAME:str
+    ES_PASSWORD: str
 
     # ── Embedding ────────────────────────────────────────────
     EMBEDDING_PROVIDER: Literal["ollama", "openai"]
