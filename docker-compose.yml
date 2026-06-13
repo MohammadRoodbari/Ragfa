@@ -58,7 +58,7 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - /home/mim/Desktop/ollama/ollama/models:/root/.ollama
+      - ./ollama/models:/root/.ollama
     environment:
       OLLAMA_HOST: 0.0.0.0
     deploy:
