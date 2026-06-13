@@ -12,7 +12,7 @@ FastAPI service for hybrid kNN + BM25 retrieval with LLM-powered generation and 
 | Task queue | Celery 5 → RabbitMQ (broker) · Redis DB1 (results) |
 | Cache / sessions | Redis DB0 — conversation history + job status |
 | Search | Elasticsearch 9 |
-| LLM | Ollama (default) · OpenAI · vLLM |
+| LLM | Ollama · OpenAI |
 
 ---
 
